@@ -217,12 +217,6 @@ public class BST implements Tree {
     }
 
     public int getInternalPathLength() {
-
-        /*
-            МЕСТО ПОСЛЕДНЕГО ВЫДОХА ГОСПОДИНА ПЖ
-            НУЖНО БОЛЬШЕ СТАКОВ!!!
-        */
-
         if (root == null) {
             System.out.println("The tree is empty.");
             return 0;
@@ -230,16 +224,32 @@ public class BST implements Tree {
         int level = 0;
         int internalPathLength = 0;
         Node current = root;
-        Node parent = null;
+        Stack rightNodes = new Stack();
+        Stack rightLevels = new Stack();
         while (true) {
-            if (current.left != null || current.right != null) {
-
+            if (current.left != null && current.right != null) {
+                internalPathLength += level++;
+                rightNodes.push(current.right);
+                rightLevels.push(new Integer(level));
+                current = current.left;
+            } else if (current.left != null) {
+                internalPathLength += level++;
+                current = current.left;
+            } else if (current.right != null) {
+                internalPathLength += level++;
+                current = current.right;
             } else {
-                return internalPathLength;
+                if (rightNodes.empty()) {
+                    return internalPathLength;
+                } else {
+                    current = (Node) rightNodes.pop();
+                    level = Integer.parseInt(rightLevels.pop().toString());
+                }
             }
         }
     }
 
+    /*
     public void showTree() {
         Stack globalStack = new Stack();
         globalStack.push(root);
@@ -279,7 +289,27 @@ public class BST implements Tree {
         }
         System.out.println(".....................................");
     }
+    */
 
+    public void showTree() {
+        if (root == null) {
+            System.out.println("The tree is empty.");
+            return;
+        }
+        printNode(root, "", true);
+    }
+
+    private void printNode(Node node, String prefix, boolean isTail) {
+        System.out.println(prefix + (isTail ? "└── " : "├── ") + node.key);
+        if (node.left != null || node.right != null) {
+            if (node.left != null) {
+                printNode(node.left, prefix + (isTail ? "    " : "│   "), false);
+            }
+            if (node.right != null) {
+                printNode(node.right, prefix + (isTail ? "    " : "│   "), false);
+            }
+        }
+    }
 
     /*
         Execution of program
@@ -300,15 +330,24 @@ public class BST implements Tree {
         System.out.println("Trying to find element 10. Successful: " + (tree.findNode(10) != null));
         System.out.println("Length of the tree is: " + tree.getLength());
         System.out.println("Emptiness of the tree is: " + tree.isEmpty());
+        System.out.println("The internal path of the tree is: " + tree.getInternalPathLength());
         System.out.println();
         tree.removeNode(30);
         tree.showTree();
+        System.out.println("The internal path of the tree is: " + tree.getInternalPathLength());
         System.out.println();
         tree.clearTree();
         tree.showTree();
         System.out.println("Length of the tree is: " + tree.getLength());
         System.out.println("Emptiness of the tree is: " + tree.isEmpty());
         System.out.println("Trying to find element 10. Successful: " + (tree.findNode(10) != null));
+        System.out.println();
+        int[] keys = {8, 4, 3, 2, 5, 6, 7, 11, 10, 13, 15, 17, 19, 18, 22, 21};
+        for (int i = 0; i < keys.length; i++) {
+            tree.addNode(keys[i]);
+        }
+        tree.showTree();
+        System.out.println("The internal path of the tree is: " + tree.getInternalPathLength());
     }
 
 }
