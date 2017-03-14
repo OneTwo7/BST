@@ -1,4 +1,6 @@
+import java.util.Scanner;
 import java.util.Stack;
+import java.util.concurrent.ThreadLocalRandom;
 
 interface Tree {
 
@@ -37,10 +39,10 @@ interface Tree {
 
 }
 
-class Node {
+class Node<T> {
 
     int key;
-    double data;
+    T data;
     Node left;
     Node right;
 
@@ -50,13 +52,18 @@ class Node {
         right = null;
     }
 
-    public String toString () {
-        return Integer.toString(this.key);
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public T getData() {
+        return data;
     }
 
 }
 
 class Iterator {
+
     private Node root = null;
     private Node current = null;
     private Stack temporary = new Stack();
@@ -92,9 +99,8 @@ class Iterator {
     }
 
     // доступ к данным текущего элемента дерева
-    public double getData () {
+    public void getData () {
         System.out.println(current.key + ": " + current.data);
-        return current.data;
     }
 
     // переход к следующему по значению ключа элементу дерева
@@ -118,16 +124,33 @@ class Iterator {
             traverseSubtree(node.right);
         }
     }
+
 }
 
-public class BST implements Tree {
+class BST implements Tree {
 
     private static Node root;
-    private int length;
+    private static final String[] TYPES = {"byte", "short", "int", "long", "float", "double", "boolean", "char"};
+    private String type;
+    private int length = 0;
     private int counter = 0;
 
-    private BST () {
+    BST () {
         root = null;
+    }
+
+    public void setNodeType (String nodeType) {
+        boolean valid = false;
+        for (int i = 0; i < TYPES.length; i++) {
+            if (nodeType.equals(TYPES[i])) {
+                valid = true;
+            }
+        }
+        if (valid) {
+            type = nodeType;
+        } else {
+            System.out.println("Incorrect type");
+        }
     }
 
     public int getLength () {
@@ -183,7 +206,39 @@ public class BST implements Tree {
     public void addNode (int key) {
         counter = 0;
         length++;
-        Node newOne = new Node(key);
+        Node newOne;
+        if (type.length() > 0) {
+            switch(type) {
+                case "byte":
+                    newOne = new Node<Byte>(key);
+                    break;
+                case "short":
+                    newOne = new Node<Short>(key);
+                    break;
+                case "int":
+                    newOne = new Node<Integer>(key);
+                    break;
+                case "long":
+                    newOne = new Node<Long>(key);
+                    break;
+                case "float":
+                    newOne = new Node<Float>(key);
+                    break;
+                case "double":
+                    newOne = new Node<Double>(key);
+                    break;
+                case "boolean":
+                    newOne = new Node<Boolean>(key);
+                    break;
+                case "char":
+                    newOne = new Node<Character>(key);
+                    break;
+                default:
+                    newOne = new Node(key);
+            }
+        } else {
+            newOne = new Node(key);
+        }
         if (root == null) {
             root = newOne;
             return;
@@ -439,77 +494,32 @@ public class BST implements Tree {
         } else {
             counter++;
         }
+
     }
 
     /*
         Execution of program
         Just for testing
     */
+    /*
     public static void main (String []args) {
         BST tree = new BST();
-        /*
-        tree.addNode(2);
-        tree.addNode(1);
-        tree.addNode(1);
-        tree.addNode(30);
-        tree.addNode(10);
-        tree.addNode(69);
-        tree.addNode(74);
-        tree.showTree();
-        System.out.println("Trying to find element 11. Successful: " + (tree.findNode(11) != null));
-        System.out.println("Trying to find element 1. Successful: " + (tree.findNode(1) != null));
-        System.out.println("Trying to find element 10. Successful: " + (tree.findNode(10) != null));
-        System.out.println("Length of the tree is: " + tree.getLength());
-        System.out.println("Emptiness of the tree is: " + tree.isEmpty());
-        System.out.println("The internal path of the tree is: " + tree.getInternalPathLength());
-        System.out.println("Starting traversing the tree...");
-        tree.traverseTree();
-        System.out.println();
-        tree.removeNode(30);
-        tree.showTree();
-        System.out.println("The internal path of the tree is: " + tree.getInternalPathLength());
-        System.out.println("Starting traversing the tree...");
-        tree.traverseTree();
-        System.out.println();
-        tree.clearTree();
-        tree.showTree();
-        System.out.println("Length of the tree is: " + tree.getLength());
-        System.out.println("Emptiness of the tree is: " + tree.isEmpty());
-        System.out.println("Trying to find element 10. Successful: " + (tree.findNode(10) != null));
-        System.out.println("The internal path of the tree is: " + tree.getInternalPathLength());
-        System.out.println("Starting traversing the tree...");
-        tree.traverseTree();
-        System.out.println();
-        */
-        int[] keys = {8, 4, 3, 2, 5, 6, 7, 11, 10, 13, 15, 17, 19, 18, 22, 21};
-        for (int i = 0; i < keys.length; i++) {
-            tree.addNode(keys[i]);
-            System.out.println("Number of nodes visited: " + tree.getNumberOfNodesVisitedByOperation());
+        Scanner reader = new Scanner(System.in);  // Reading from System.in
+        System.out.println("Enter a number: ");
+        int n = reader.nextInt(); // Scans the next token of the input as an int.
+        boolean executionInProgress = true;
+        while (executionInProgress) {
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
         }
-        tree.getLength();
-        System.out.println("Number of nodes visited: " + tree.getNumberOfNodesVisitedByOperation());
-        tree.showTree();
-        System.out.println("Number of nodes visited: " + tree.getNumberOfNodesVisitedByOperation());
-        /*
-        System.out.println("The internal path of the tree is: " + tree.getInternalPathLength());
-        System.out.println("Starting traversing the tree...");
-        Stack result = tree.traverseTree();
-        System.out.println(result);
-        */
-        Iterator it = tree.getIterator();
-        it.getData();
-        it.goToNext();
-        it.goToNext();
-        it.goToNext();
-        it.getData();
-        it.goToPrevious();
-        it.getData();
-        it.setToRoot();
-        it.goToPrevious();
-        it.goToPrevious();
-        it.goToPrevious();
-        it.goToPrevious();
-        it.getData();
     }
-
+    */
 }
