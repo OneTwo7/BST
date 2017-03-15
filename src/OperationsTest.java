@@ -46,7 +46,7 @@ public class OperationsTest {
                 stack.push(doubleData);
                 break;
             case "boolean":
-                int newInt = ThreadLocalRandom.current().nextInt(0, 1);
+                int newInt = ThreadLocalRandom.current().nextInt(0, 2);
                 stack.push(newInt == 1);
                 break;
             case "char":
@@ -66,6 +66,7 @@ public class OperationsTest {
         String type;
         Node node;
         String line;
+        Iterator iterator;
         boolean executionInProgress = true;
         while (executionInProgress) {
             System.out.println("Введите номер соответствующий одной из операций.");
@@ -150,10 +151,45 @@ public class OperationsTest {
                     System.out.println("Операция исполнена.");
                     break;
                 case 8:
-                    System.out.println("Операция временно недоступна.");
-                    //
-                    //tree.getIterator();
-                    //
+                    iterator = tree.getIterator();
+                    while (n != 0) {
+                        System.out.println("Введите число для выбора операции производимой итератором.");
+                        System.out.println("1 - установка на корень дерева");
+                        System.out.println("2 - проверка конца дерева");
+                        System.out.println("3 - доступ к данным");
+                        System.out.println("4 - переход к следующему узлу дерева");
+                        System.out.println("5 - переход к предыдущему узлу дерева");
+                        System.out.println("0 - завершение работы итератора");
+                        n = reader.nextInt();
+                        switch (n) {
+                            case 0:
+                                break;
+                            case 1:
+                                iterator.setToRoot();
+                                break;
+                            case 2:
+                                if (iterator.isLast()) {
+                                    System.out.println("Итератор установлен на последний элемент дерева.");
+                                } else {
+                                    System.out.println("Данный элемент не является последним.");
+                                }
+                                break;
+                            case 3:
+                                iterator.getData();
+                                break;
+                            case 4:
+                                iterator.goToNext();
+                                break;
+                            case 5:
+                                iterator.goToPrevious();
+                                break;
+                            default:
+                                System.out.println("Введен некорректный идентификатор операции.");
+                        }
+                        if (n != 0) {
+                            System.out.println("Выполнено.\n");
+                        }
+                    }
                     System.out.println("Операция исполнена.");
                     break;
                 case 9:
@@ -165,6 +201,7 @@ public class OperationsTest {
                     System.out.println("Операция исполнена.");
                     break;
                 case 11:
+                    System.out.println();
                     tree.showTree();
                     System.out.println("Операция исполнена.");
                     break;

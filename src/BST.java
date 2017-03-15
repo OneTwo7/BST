@@ -73,7 +73,6 @@ class Iterator {
     Iterator (Node treeRoot) {
         root = treeRoot;
         setToRoot();
-        System.out.println(previousNodes + " " + nextNodes);
     }
 
     // установка на корень дерева
@@ -105,14 +104,22 @@ class Iterator {
 
     // переход к следующему по значению ключа элементу дерева
     public void goToNext () {
-        previousNodes.push(current);
-        current = (Node) nextNodes.pop();
+        if (nextNodes.empty()) {
+            System.out.println("Следующий элемент отсутствует.");
+        } else {
+            previousNodes.push(current);
+            current = (Node) nextNodes.pop();
+        }
     }
 
     // переход к предыдущему по значению ключа элементу дерева
     public void goToPrevious () {
-        nextNodes.push(current);
-        current = (Node) previousNodes.pop();
+        if (previousNodes.empty()) {
+            System.out.println("Предыдущий элемент отсутствует.");
+        } else {
+            nextNodes.push(current);
+            current = (Node) previousNodes.pop();
+        }
     }
 
     private void traverseSubtree (Node node) {
