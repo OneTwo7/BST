@@ -3,22 +3,29 @@ import java.util.Stack;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class OperationsTest {
-    public static void fillTree (BST tree, int numOfNodes, String type) {
+    static void fillTree(BST tree, int numOfNodes, String type) {
+        /*
+            функция заполнения дерева случайными элементами
+         */
         if (!tree.isEmpty()) {
             tree.clearTree();
         }
         int key;
+        int max = numOfNodes < 100 ? 1000 : numOfNodes * 10;
         Node current;
         tree.setNodeType(type);
         while (tree.getLength() < numOfNodes) {
-            key = ThreadLocalRandom.current().nextInt(0, 100);
+            key = ThreadLocalRandom.current().nextInt(0, max);
             tree.addNode(key);
             current = tree.findNode(key);
             current.setData(getRandomData(type).pop());
         }
     }
 
-    public static Stack getRandomData (String type) {
+    private static Stack getRandomData(String type) {
+        /*
+            функция, возвращающая случайное значение заданного типа данных
+         */
         Stack stack = new Stack();
         switch (type) {
             case "byte":
@@ -65,7 +72,6 @@ public class OperationsTest {
         int numOfNodes;
         String type;
         Node node;
-        String line;
         Iterator iterator;
         boolean executionInProgress = true;
         while (executionInProgress) {
@@ -108,15 +114,12 @@ public class OperationsTest {
                     }
                     type = TYPES[n];
                     fillTree(tree, numOfNodes, type);
-                    System.out.println("Операция исполнена.");
                     break;
                 case 2:
                     System.out.println(tree.getLength());
-                    System.out.println("Операция исполнена.");
                     break;
                 case 3:
                     tree.clearTree();
-                    System.out.println("Операция исполнена.");
                     break;
                 case 4:
                     if (tree.isEmpty()) {
@@ -124,7 +127,6 @@ public class OperationsTest {
                     } else {
                         System.out.println("Дерево заполнено.");
                     }
-                    System.out.println("Операция исполнена.");
                     break;
                 case 5:
                     System.out.println("Введите ключ искомого элемента.");
@@ -136,19 +138,20 @@ public class OperationsTest {
                         System.out.println("Элемент найден.");
                         System.out.println(node.key + ": " + node.data);
                     }
-                    System.out.println("Операция исполнена.");
                     break;
                 case 6:
                     System.out.println("Введите ключ элемента для добавления.");
                     n = reader.nextInt();
                     tree.addNode(n);
-                    System.out.println("Операция исполнена.");
                     break;
                 case 7:
                     System.out.println("Введите ключ элемента для удаления.");
                     n = reader.nextInt();
+                    node = tree.findNode(n);
+                    if (node == null) {
+                        System.out.println("В дереве нет элемента с заданным ключом");
+                    }
                     tree.removeNode(n);
-                    System.out.println("Операция исполнена.");
                     break;
                 case 8:
                     iterator = tree.getIterator();
@@ -190,33 +193,22 @@ public class OperationsTest {
                             System.out.println("Выполнено.\n");
                         }
                     }
-                    System.out.println("Операция исполнена.");
                     break;
                 case 9:
                     tree.traverseTree();
-                    System.out.println("Операция исполнена.");
                     break;
                 case 10:
                     System.out.println("Длина внутреннего пути дерева:" + tree.getInternalPathLength());
-                    System.out.println("Операция исполнена.");
                     break;
                 case 11:
                     System.out.println();
                     tree.showTree();
-                    System.out.println("Операция исполнена.");
                     break;
                 case 12:
                     System.out.println("Число просмотренных узлов:" + tree.getNumberOfNodesVisitedByOperation());
-                    System.out.println("Операция исполнена.");
                     break;
                 default:
                     executionInProgress = false;
-            }
-            System.out.println("Для завершения программы введите 0. ");
-            reader.nextLine();
-            line = reader.nextLine();
-            if (line.equals("0")) {
-                break;
             }
             System.out.println();
         }

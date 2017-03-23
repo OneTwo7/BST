@@ -1,8 +1,9 @@
-import java.util.Scanner;
 import java.util.Stack;
-import java.util.concurrent.ThreadLocalRandom;
 
 interface Tree {
+    /*
+        Интерфейс АТД "BST - дерево"
+     */
 
     // опрос размера дерева
     int getLength ();
@@ -40,6 +41,9 @@ interface Tree {
 }
 
 class Node<T> {
+    /*
+        Элемент дерева с абстрактным типом данных
+     */
 
     int key;
     T data;
@@ -52,17 +56,17 @@ class Node<T> {
         right = null;
     }
 
+    // Присвоение элементу данных определенного типа
     public void setData(T data) {
         this.data = data;
-    }
-
-    public T getData() {
-        return data;
     }
 
 }
 
 class Iterator {
+    /*
+        Итератор для доступа к элементам дерева
+     */
 
     private Node root = null;
     private Node current = null;
@@ -122,6 +126,7 @@ class Iterator {
         }
     }
 
+    // вспомогательная функция для составление списка элементов дерева
     private void traverseSubtree (Node node) {
         if (node.left != null) {
             traverseSubtree(node.left);
@@ -135,6 +140,9 @@ class Iterator {
 }
 
 class BST implements Tree {
+    /*
+        класс "BST - дерево"
+     */
 
     private static Node root;
     private static final String[] TYPES = {"byte", "short", "int", "long", "float", "double", "boolean", "char"};
@@ -146,6 +154,7 @@ class BST implements Tree {
         root = null;
     }
 
+    // установка типа данных, хранящихся в дереве
     public void setNodeType (String nodeType) {
         boolean valid = false;
         for (int i = 0; i < TYPES.length; i++) {
@@ -160,22 +169,26 @@ class BST implements Tree {
         }
     }
 
+    // опрос размера дерева
     public int getLength () {
         counter = 0;
         return length;
     }
 
+    // очистка дерева
     public void clearTree () {
         counter = 0;
         root = null;
         length = 0;
     }
 
+    // проверка дерева на пустоту
     public boolean isEmpty () {
         counter = 0;
         return root == null;
     }
 
+    // поиск элемента с заданным ключом
     public Node findNode (int key) {
         counter = 0;
         if (checkForEmptiness()) {
@@ -190,7 +203,6 @@ class BST implements Tree {
                 counter += 2;
                 if (current.left == null) {
                     counter++;
-                    System.out.println("There's no such element in the tree.");
                     return null;
                 } else {
                     current = current.left;
@@ -200,7 +212,6 @@ class BST implements Tree {
                 counter += 2;
                 if (current.right == null) {
                     counter++;
-                    System.out.println("There's no such element in the tree.");
                     return null;
                 } else {
                     current = current.right;
@@ -210,6 +221,7 @@ class BST implements Tree {
         }
     }
 
+    // включение нового элемента с заданным ключом
     public void addNode (int key) {
         counter = 0;
         length++;
@@ -281,6 +293,7 @@ class BST implements Tree {
         }
     }
 
+    // удаление элемента с заданным ключом
     public void removeNode (int key) {
         if (checkForEmptiness()) {
             return;
@@ -304,7 +317,6 @@ class BST implements Tree {
             if (current == null) {
                 counter++;
                 length++;
-                System.out.println("There's no such element in the tree.");
                 return;
             }
         }
@@ -368,10 +380,12 @@ class BST implements Tree {
         }
     }
 
+    // получение итератора для доступа к элементам дерева
     public Iterator getIterator() {
         return new Iterator(root);
     }
 
+    // обход дерева по схеме Lt -> t -> Rt в нерекурсивной форме
     public void traverseTree () {
         counter = 0;
         if (checkForEmptiness()) {
@@ -402,6 +416,7 @@ class BST implements Tree {
         }
     }
 
+    // определение длины внутреннего пути дерева (нерекурсивная форма)
     public int getInternalPathLength () {
         counter = 0;
         if (checkForEmptiness()) {
@@ -416,7 +431,7 @@ class BST implements Tree {
             if (current.left != null && current.right != null) {
                 internalPathLength += level++;
                 rightNodes.push(current.right);
-                rightLevels.push(new Integer(level));
+                rightLevels.push(level);
                 current = current.left;
                 counter += 4;
             } else if (current.left != null) {
@@ -439,6 +454,7 @@ class BST implements Tree {
         }
     }
 
+    // вывод структуры дерева на экран
     public void showTree () {
         counter = 0;
         if (checkForEmptiness()) {
@@ -447,10 +463,12 @@ class BST implements Tree {
         printNode(root, "", true);
     }
 
+    // опрос числа просмотренных операцией узлов дерева
     public int getNumberOfNodesVisitedByOperation() {
         return counter;
     }
 
+    // дополнительная функцая для внутренней проверки дерева на пустоту
     private boolean checkForEmptiness () {
         if (root == null) {
             counter++;
@@ -460,6 +478,7 @@ class BST implements Tree {
         return false;
     }
 
+    // функция поиска замены удаленному элементу
     private Node getReplacement (Node nodeToBeReplaced) {
         Node replacement = null;
         Node repParent = null;
@@ -481,11 +500,13 @@ class BST implements Tree {
         return replacement;
     }
 
+    // дополнительная функция для вывода данных элемента
     private void printNodeInfo (Node node) {
         System.out.println(node.key + ": " + node.data);
         counter += 2;
     }
 
+    // дополнительная функция для вывода структуры дерева на экран
     private void printNode (Node node, String prefix, boolean isTail) {
         System.out.println(prefix + (isTail ? "└── " : "├── ") + node.key);
         counter++;
@@ -501,32 +522,6 @@ class BST implements Tree {
         } else {
             counter++;
         }
-
     }
 
-    /*
-        Execution of program
-        Just for testing
-    */
-    /*
-    public static void main (String []args) {
-        BST tree = new BST();
-        Scanner reader = new Scanner(System.in);  // Reading from System.in
-        System.out.println("Enter a number: ");
-        int n = reader.nextInt(); // Scans the next token of the input as an int.
-        boolean executionInProgress = true;
-        while (executionInProgress) {
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-        }
-    }
-    */
 }
